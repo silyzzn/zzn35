@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        ul{
+            margin:0;
+            padding:0;
+            height:172px;
+            position:relative;
+            overflow: hidden;
+        }
+        li{
+            list-style: none;
+            width:120px;
+            height:172px;
+            float:left;
+            position:relative;
+        }
+        div{
+            position:absolute;
+            top:0;
+        }
+        img{
+            width:118px;
+            height:172px;
+        }
+    </style>
+</head>
+<body>
+<ul>
+    <li>
+        <div><img src="img/0.JPG"><img src="img/0.JPG"></div>
+    </li>
+    <li>
+        <div><img src="img/0.JPG"><img src="img/0.JPG"></div>
+    </li>
+    <li>
+        <img src="img/colon.JPG">
+    </li>
+    <li>
+        <div><img src="img/0.JPG"><img src="img/0.JPG"></div>
+    </li>
+    <li>
+        <div><img src="img/0.JPG"><img src="img/0.JPG"></div>
+    </li>
+    <li>
+        <img src="img/colon.JPG">
+    </li>
+    <li>
+        <div><img src="img/0.JPG"><img src="img/0.JPG"></div>
+    </li>
+    <li>
+        <div><img src="img/0.JPG"><img src="img/0.JPG"></div>
+    </li>
+</ul>
+<script>
+    var divs=document.getElementsByTagName("div");
+    var imgs=document.querySelectorAll("li>img");//通过选择器获取到两个不用改变的点的图片
+    var mytime=getTime();
+    for(var i=0;i<mytime.length;i++){
+        divs[i].getElementsByTagName("img")[0].src="img/"+mytime[i]+".JPG";
+    }
+    //设置定时器
+    setInterval(function(){
+        for(var i=0;i<imgs.length;i++) {
+            imgs[i].src = "img/colon.JPG";
+        }
+        setTimeout(function(){
+            for(var i=0;i<imgs.length;i++){
+                imgs[i].src="img/colon1.JPG";
+            }
+        },500);
+        auto_play();
+    },1000);
+    function getTime(){//首先要获取到时间的时、分。秒
+        var date=new Date();
+        var h=date.getHours();
+        var m=date.getMinutes();
+        var s=date.getSeconds();
+        var time=toTwo(h)+toTwo(m)+toTwo(s);//将他们组合成一个字符串
+        return time;
+    }
+    function auto_play() {
+        var time1 = getTime();
+        console.log(time1+"--"+mytime);
+        for (var i = 0; i < time1.length; i++) {
+            if (time1[i] != mytime[i]) {
+                console.log(i);
+               slide(i,time1);
+
+            }
+        }
+        mytime=time1;
+
+    }
+    function slide(n,time){
+        var change_img=divs[n].getElementsByTagName("img");
+        change_img[1].src="img/"+time[n]+".JPG";
+        var my_top=parseInt(getComputedStyle(divs[n])["top"]);
+        var move=-172-my_top;
+        var now=new Date().getTime();
+        var interval=setInterval(function(){
+            var t=new Date().getTime()-now;
+            var value=my_top+move/400*t;
+            divs[n].style["top"]=value+"px";
+            if(t>=400){
+                clearInterval(interval);
+                change_img[0].src="img/"+time[n]+".JPG";
+                divs[n].style.top="";
+            }
+        },30)
+    }
+    //有些时候当时间小于10时，应该在前面补0
+    function toTwo(n){
+        return n>=10?""+n:"0"+n;
+    }
+    console.log(mytime);
+</script>
+</body>
+</html>
